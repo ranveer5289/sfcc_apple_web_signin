@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xmlns="http://www.demandware.com/xml/impex/metadata/2006-10-31">
+    <type-extension type-id="SitePreferences">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="appleSignInClientId">
+                <display-name xml:lang="x-default">Apple Web Sign-In Client ID</display-name>
+                <description xml:lang="x-default">Apple Web Sign-In Client ID</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="appleSignInJSURL">
+                <display-name xml:lang="x-default">Apple Web Sign-In Client side JS Url</display-name>
+                <description xml:lang="x-default">Apple Web Sign-In Client side JS Url</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <default-value>https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="appleSignInJWTIssuerId">
+                <display-name xml:lang="x-default">Apple Web Sign-In JWT Issuer ID</display-name>
+                <description xml:lang="x-default">Apple Web Sign-In JWT Issuer ID</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <default-value>https://appleid.apple.com</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="appleSignInRequestScopes">
+                <display-name xml:lang="x-default">Apple Web Sign-In Requested Scopes</display-name>
+                <description xml:lang="x-default">Apple Web Sign-In Requested Scopes</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+                <default-value>name email</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="isAppleSignInEnabled">
+                <display-name xml:lang="x-default">Apple Web Sign-In Enabled or not</display-name>
+                <description xml:lang="x-default">Apple Web Sign-In Enabled or not</description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>false</default-value>
+            </attribute-definition>
+        </custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="AppleWebSignIn">
+                <display-name xml:lang="x-default">Apple Web Sign-In</display-name>
+                <attribute attribute-id="isAppleSignInEnabled"/>
+                <attribute attribute-id="appleSignInJSURL"/>
+                <attribute attribute-id="appleSignInClientId"/>
+                <attribute attribute-id="appleSignInRequestScopes"/>
+                <attribute attribute-id="appleSignInJWTIssuerId"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+</metadata>
