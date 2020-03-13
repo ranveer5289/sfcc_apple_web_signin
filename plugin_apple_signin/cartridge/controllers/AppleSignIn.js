@@ -54,7 +54,9 @@ server.post('Redirect', function (req, res, next) {
     var configuredIssuer = Site.getCurrent().getCustomPreferenceValue('appleSignInJWTIssuerId');
     var configuredClientId = Site.getCurrent().getCustomPreferenceValue('appleSignInClientId');
 
-    if (!tokenIssuer || tokenIssuer !== configuredIssuer || !clientId || clientId !== configuredClientId) {
+    if (!tokenIssuer || tokenIssuer !== configuredIssuer ||
+            !clientId || clientId !== configuredClientId ||
+            !email || userEmail !== email) {
         res.redirect(redirectUrl.append('errorcode', 'apple.signin.error').toString());
         Logger.debug('Apple Web Sign-In : token, issuer or client-id mis-match');
         return next();

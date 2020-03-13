@@ -19,3 +19,6 @@ Note: Use controller endpoint "AppleSignIn-Redirect" as return/callback url in a
 
 1. https://developer.apple.com/documentation/signinwithapplejs
 2. https://stackoverflow.com/questions/58018184/how-to-revoke-sign-in-with-apple-credentials-for-a-specific-app
+
+
+Note: I'm not a security expert, if you find any mistake in this repo, please create an issue
