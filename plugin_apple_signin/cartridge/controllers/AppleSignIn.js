@@ -9,6 +9,8 @@ server.post('Redirect', function (req, res, next) {
     var Site = require('dw/system/Site');
     var Logger = require('dw/system/Logger');
 
+    var appleHelpers = require('*/cartridge/scripts/helpers/appleHelpers');
+
     var httpMap = request.httpParameterMap; // no other way to get this data req.body & req.querystring both doesn't work
     var idToken = httpMap.id_token.stringValue;
     var state = httpMap.state.stringValue;
@@ -30,7 +32,7 @@ server.post('Redirect', function (req, res, next) {
     var redirectUrl = URLUtils.url('Login-Show');
     if (!idToken || !state || !code) {
         res.redirect(redirectUrl.append('errorcode', 'apple.signin.error').toString());
-        Logger.debug('Apple Web Sign-In : One of the mandatory value id_token, state or code is missing');
+        Logger.error('Apple Web Sign-In : One of the mandatory value id_token, state or code is missing');
         return next();
     }
 
@@ -38,29 +40,37 @@ server.post('Redirect', function (req, res, next) {
     // CSRF mismatch
     if (existingState !== state) {
         res.redirect(redirectUrl.append('errorcode', 'apple.signin.error').toString());
-        Logger.debug('Apple Web Sign-In : OAuth2 state did not matched');
+        Logger.error('Apple Web Sign-In : OAuth2 state did not matched');
+        req.session.privacyCache.set('appleSignInState', null);
         return next();
     }
-    req.session.privacyCache.set('appleSignInState', '');
+    req.session.privacyCache.set('appleSignInState', null);
 
-    var parsedAppleToken = parseJwt(idToken);
-
-    var tokenIssuer = parsedAppleToken.iss;
-    var clientId = parsedAppleToken.aud;
-    // subject identifer - customer - unique for customer in apple DB
-    var userID = parsedAppleToken.sub;
-    var email = parsedAppleToken.email;
-
-    var configuredIssuer = Site.getCurrent().getCustomPreferenceValue('appleSignInJWTIssuerId');
-    var configuredClientId = Site.getCurrent().getCustomPreferenceValue('appleSignInClientId');
-
-    if (!tokenIssuer || tokenIssuer !== configuredIssuer ||
-            !clientId || clientId !== configuredClientId ||
-            !email || userEmail !== email) {
+    var isValidToken = appleHelpers.verifyJWT(idToken);
+    // JWT token signature invalid
+    if (!isValidToken) {
         res.redirect(redirectUrl.append('errorcode', 'apple.signin.error').toString());
-        Logger.debug('Apple Web Sign-In : token, issuer or client-id mis-match');
+        Logger.error('Apple Web Sign-In : Invalid jwt token, signature did not matched');
         return next();
     }
+
+    var options = {};
+    options.configuredIssuer = Site.getCurrent().getCustomPreferenceValue('appleSignInJWTIssuerId');
+    options.configuredClientId = Site.getCurrent().getCustomPreferenceValue('appleSignInClientId');
+
+    var isJWTDataValid = appleHelpers.validateJWTData(idToken, options);
+    // payload data inside JWT is not correct
+    if (!isJWTDataValid) {
+        res.redirect(redirectUrl.append('errorcode', 'apple.signin.error').toString());
+        Logger.error('Apple Web Sign-In : JWT claim, issuer or expiration mis-match');
+        return next();
+    }
+
+    var parsedJWTPayload = appleHelpers.parseJwt(idToken, 1);
+
+    // subject identifer - customer - unique for customer in apple DB
+    var userID = parsedJWTPayload.sub;
+    var email = parsedJWTPayload.email;
 
     var authenticatedCustomerProfile = CustomerMgr.getExternallyAuthenticatedCustomerProfile(
         oauthProviderID,
@@ -95,15 +105,7 @@ server.post('Redirect', function (req, res, next) {
     next();
 });
 
-function parseJwt (token) {
-    var StringUtils = require('dw/util/StringUtils');
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(StringUtils.decodeBase64(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-
-    return JSON.parse(jsonPayload);
-};
-
 module.exports = server.exports();
+
+
+
