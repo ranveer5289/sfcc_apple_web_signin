@@ -4,8 +4,8 @@ var Bytes = require('dw/util/Bytes');
 var Site = require('dw/system/Site');
 
 /**
- * Verify the encoded jwt token signature using the
- * apple JWKS public key
+ * Before we use the token, we need to make sure that it was signed by Apple's private key. 
+ * To do that, we need Apple's public key to verify the signature.
  * @param {String} encodedJWTToken Encoded JWT token
  * @returns{Boolean} valid or not
  */
