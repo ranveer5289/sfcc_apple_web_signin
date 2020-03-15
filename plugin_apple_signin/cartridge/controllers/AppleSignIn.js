@@ -1,4 +1,5 @@
 var server = require('server');
+var jwt = require('plugin_jwt');
 
 var oauthProviderID = 'AppleWebSignIn';
 
@@ -21,12 +22,10 @@ server.post('Redirect', function (req, res, next) {
     var userData = httpMap.user.stringValue;
     var firstName = '';
     var lastName = '';
-    var userEmail = '';
     if (userData) {
         appleUser = JSON.parse(userData);
         firstName = appleUser.name.firstName;
         lastName = appleUser.name.lastName;
-        userEmail = appleUser.email;
     }
 
     var redirectUrl = URLUtils.url('Login-Show');
@@ -46,6 +45,14 @@ server.post('Redirect', function (req, res, next) {
     }
     req.session.privacyCache.set('appleSignInState', null);
 
+    // Decode JWT token
+    var decodedToken = jwt.decode(idToken);
+    if(!decodedToken) {
+        Logger.error('Unable to decode JWT token');
+        res.redirect(redirectUrl.append('errorcode', 'apple.signin.error').toString());
+        return next();
+    }
+
     var isValidToken = appleHelpers.verifyJWT(idToken);
     // JWT token signature invalid
     if (!isValidToken) {
@@ -58,19 +65,17 @@ server.post('Redirect', function (req, res, next) {
     options.configuredIssuer = Site.getCurrent().getCustomPreferenceValue('appleSignInJWTIssuerId');
     options.configuredClientId = Site.getCurrent().getCustomPreferenceValue('appleSignInClientId');
 
-    var isJWTDataValid = appleHelpers.validateJWTData(idToken, options);
+    var isValidPayload = appleHelpers.validateJWTPayload(decodedToken.payload, options);
     // payload data inside JWT is not correct
-    if (!isJWTDataValid) {
+    if (!isValidPayload) {
         res.redirect(redirectUrl.append('errorcode', 'apple.signin.error').toString());
         Logger.error('Apple Web Sign-In : JWT claim, issuer or expiration mis-match');
         return next();
     }
 
-    var parsedJWTPayload = appleHelpers.parseJwt(idToken, 1);
-
     // subject identifer - customer - unique for customer in apple DB
-    var userID = parsedJWTPayload.sub;
-    var email = parsedJWTPayload.email;
+    var userID = decodedToken.payload.sub;
+    var email = decodedToken.payload.email;
 
     var authenticatedCustomerProfile = CustomerMgr.getExternallyAuthenticatedCustomerProfile(
         oauthProviderID,
@@ -88,7 +93,7 @@ server.post('Redirect', function (req, res, next) {
 
             authenticatedCustomerProfile.setFirstName(firstName);
             authenticatedCustomerProfile.setLastName(lastName);
-            authenticatedCustomerProfile.setEmail(userEmail);
+            authenticatedCustomerProfile.setEmail(email);
         });
     }
 
