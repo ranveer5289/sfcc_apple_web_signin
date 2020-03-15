@@ -1,4 +1,8 @@
-// https://stackoverflow.com/questions/18835132/xml-to-pem-in-node-js
+/**
+ * Highly custom logic to create public key.
+ * Return public key as DER
+ * https://stackoverflow.com/questions/18835132/xml-to-pem-in-node-js
+ */
 var Encoding = require('dw/crypto/Encoding');
 function getRSAPublicKey(modulus_b64, exponent_b64) {
 

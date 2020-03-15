@@ -47,6 +47,7 @@ server.post('Redirect', function (req, res, next) {
     req.session.privacyCache.set('appleSignInState', null);
 
     var isValidToken = appleHelpers.verifyJWT(idToken);
+    // JWT token signature invalid
     if (!isValidToken) {
         res.redirect(redirectUrl.append('errorcode', 'apple.signin.error').toString());
         Logger.error('Apple Web Sign-In : Invalid jwt token, signature did not matched');
@@ -58,6 +59,7 @@ server.post('Redirect', function (req, res, next) {
     options.configuredClientId = Site.getCurrent().getCustomPreferenceValue('appleSignInClientId');
 
     var isJWTDataValid = appleHelpers.validateJWTData(idToken, options);
+    // payload data inside JWT is not correct
     if (!isJWTDataValid) {
         res.redirect(redirectUrl.append('errorcode', 'apple.signin.error').toString());
         Logger.error('Apple Web Sign-In : JWT claim, issuer or expiration mis-match');

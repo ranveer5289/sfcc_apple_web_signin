@@ -1,4 +1,3 @@
-/* eslint max-len: 0 */
 'use strict';
 
 var Logger = require('dw/system/Logger');
@@ -20,7 +19,7 @@ function AppleJWKSService() {
     function callback() {
 
         /**
-         * Creates the actual SOAP request
+         * Creates the actual HTTP request
          *
          * @param {dw.svc.HTTPService} svc SOAP service
          * @param {Object} params Parameters like order
@@ -61,11 +60,8 @@ function AppleJWKSService() {
     }
 
     /**
-     * Call Get Card service
-     *
-     * @param {string} code GiftCertificate Code
-     * @param {string} pin GiftCertificate Pin
-     * @returns{dw.svc.Result} Service Result
+     * Call Apple Service
+     * @returns{Object} key sets
      */
     function getJsonWebKeySets() {
         var LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
