@@ -13,52 +13,14 @@ var jwt = require('plugin_jwt');
  */
 function verifyJWT(encodedJWTToken) {
 
-    var decodedToken = jwt.decode(encodedJWTToken);
-
-    // returns json web key set from apple server
-    var jsonWebKey = getJSONWebKey(decodedToken);
-    // get public key as string from modulus & exponential. highly custom logic
-    var publicKey = getRSAPublicKey(jsonWebKey.modulus, jsonWebKey.exponential);
-
-    var apiSig = new Signature();
     var options = {};
-    options.publicKeyOrSecret = publicKey;
+    options.publicKeyOrSecret = getJSONWebKey;
+    options.issuer = Site.getCurrent().getCustomPreferenceValue('appleSignInJWTIssuerId');
+    options.audience = Site.getCurrent().getCustomPreferenceValue('appleSignInClientId');
 
-    var verified = jwt.verify(encodedJWTToken, decodedToken.header.alg, options);
+    var verified = jwt.verify(encodedJWTToken, options);
 
     return verified;
-}
-
-/**
- * Validate JWT payload. It validates claim, issuer & expiration
- * of the token
- * @param {Object} payload jwt payload
- * @param {Object} options options
- */
-function validateJWTPayload(payload, options) {
-
-    var tokenIssuer = payload.iss;
-    var clientId = payload.aud;
-    var expirationTime = payload.exp;
-
-    if (!tokenIssuer || tokenIssuer !== options.configuredIssuer) {
-        return false;
-    }
-
-    if (!clientId || clientId !== options.configuredClientId) {
-        return false;
-    }
-
-    //seconds to ms
-    var expirationDate = new Date(expirationTime * 1000);
-    var currentDate = new Date();
-
-    // expired
-    if (expirationDate < currentDate) {
-        return false;
-    }
-
-    return true;
 }
 
 /**
@@ -90,18 +52,4 @@ function getJSONWebKey(decodedToken) {
     return jsonWebKey;
 }
 
-/**
- * Get public key as string using modulus & exponential
- * @param {String} modulus Modulus
- * @param {String} exponential Exponential
- * @returns{String} public key
- */
-function getRSAPublicKey(modulus, exponential) {
-    var rsa = require('*/cartridge/scripts/helpers/rsaToDer');
-    var base64PublicKey = rsa.getRSAPublicKey(modulus, exponential);
-
-    return base64PublicKey;
-}
-
 module.exports.verifyJWT = verifyJWT;
-module.exports.validateJWTPayload = validateJWTPayload;

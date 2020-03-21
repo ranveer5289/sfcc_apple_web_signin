@@ -61,18 +61,6 @@ server.post('Redirect', function (req, res, next) {
         return next();
     }
 
-    var options = {};
-    options.configuredIssuer = Site.getCurrent().getCustomPreferenceValue('appleSignInJWTIssuerId');
-    options.configuredClientId = Site.getCurrent().getCustomPreferenceValue('appleSignInClientId');
-
-    var isValidPayload = appleHelpers.validateJWTPayload(decodedToken.payload, options);
-    // payload data inside JWT is not correct
-    if (!isValidPayload) {
-        res.redirect(redirectUrl.append('errorcode', 'apple.signin.error').toString());
-        Logger.error('Apple Web Sign-In : JWT claim, issuer or expiration mis-match');
-        return next();
-    }
-
     // subject identifer - customer - unique for customer in apple DB
     var userID = decodedToken.payload.sub;
     var email = decodedToken.payload.email;
