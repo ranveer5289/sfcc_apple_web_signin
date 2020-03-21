@@ -21,10 +21,10 @@ Note: Use controller endpoint "AppleSignIn-Redirect" as return/callback url in a
 2. https://stackoverflow.com/questions/58018184/how-to-revoke-sign-in-with-apple-credentials-for-a-specific-app
 
 
-##TODO
+## TODO
 
 1. Add jwt related documentation
 2. Doesn't merge normal account with apple account
-3. move JWT logic to a separate cartridge
 4. Unit Tests
+
 Note: I'm not a security expert, if you find any mistake in this repo, please create an issue
