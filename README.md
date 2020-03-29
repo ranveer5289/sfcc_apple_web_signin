@@ -9,6 +9,10 @@ Follow this [blog post](https://auth0.com/blog/what-is-sign-in-with-apple-a-new-
 
 Note: Use controller endpoint "AppleSignIn-Redirect" as return/callback url in apple developer account.
 
+## Dependency
+
+This cartidge has a dependency on [plugin_jwt](https://github.com/ranveer5289/sfcc_jwt) cartridge. **plugin_jwt** is used for JWT encoding/decoding.
+
 ## SFCC Configuration
 
 1. Install the cartridge on server & update the cartridge path accordingly.
@@ -19,12 +23,12 @@ Note: Use controller endpoint "AppleSignIn-Redirect" as return/callback url in a
 
 1. https://developer.apple.com/documentation/signinwithapplejs
 2. https://stackoverflow.com/questions/58018184/how-to-revoke-sign-in-with-apple-credentials-for-a-specific-app
+3. https://jwt.io/
+4. https://sarunw.com/posts/sign-in-with-apple-4/
 
 
-## TODO
+## Note
 
-1. Add jwt related documentation
-2. Doesn't merge normal account with apple account
-4. Unit Tests
+This cartridge currently does not handle the scenario where a regular SFCC account with same email address exists.
 
-Note: I'm not a security expert, if you find any mistake in this repo, please create an issue
+PS: I'm not a security expert, if you find any mistake in this repo, please create an issue
