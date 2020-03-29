@@ -23,7 +23,7 @@ function AppleJWKSService() {
          *
          * @param {dw.svc.HTTPService} svc SOAP service
          * @param {Object} params Parameters like order
-         * @returns {Object} SOAp request
+         * @returns {null}
          */
         function createRequest(svc, params) {
             svc.addHeader('accept', 'application/json');
@@ -66,8 +66,8 @@ function AppleJWKSService() {
     function getJsonWebKeySets() {
         var LocalServiceRegistry = require('dw/svc/LocalServiceRegistry');
         var serviceID = 'apple_web_signin.get.jwks';
-        var checkBalanceSvc = LocalServiceRegistry.createService(serviceID, callback());
-        var result = checkBalanceSvc.call();
+        var appleSvc = LocalServiceRegistry.createService(serviceID, callback());
+        var result = appleSvc.call();
         var output = {};
 
         if (result.ok) {

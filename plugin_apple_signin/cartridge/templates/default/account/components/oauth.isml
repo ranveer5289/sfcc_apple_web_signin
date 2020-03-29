@@ -17,6 +17,9 @@
     </div>
     <isif condition="${!empty(appleSignIn) && typeof appleSignIn === 'object' && Object.keys(appleSignIn).length > 0 && appleSignIn.enabled}">
         <div class="form-group">
+            <iscomment>
+                Below is just an example, in ideal cases you wouldn't add CSS/JS in template
+            </iscomment>
             <script src="${appleSignIn.jsURL}"></script>
             <div id="appleid-signin" data-color="black" data-border="true" data-type="sign in"></div>
             <script>

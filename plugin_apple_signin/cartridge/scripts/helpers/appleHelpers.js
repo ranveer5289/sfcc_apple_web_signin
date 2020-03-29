@@ -24,7 +24,7 @@ function verifyJWT(encodedJWTToken) {
 }
 
 /**
- * Retrieve the Json Web Key from apple server
+ * Retrieve the public Json Web Key from apple server
  * @param {String} decodedToken decoded JWT Token
  * @returns{Object} JWKS key
  */

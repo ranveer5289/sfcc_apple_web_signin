@@ -16,19 +16,22 @@ This cartidge has a dependency on [plugin_jwt](https://github.com/ranveer5289/sf
 ## SFCC Configuration
 
 1. Install the cartridge on server & update the cartridge path accordingly.
-2. Upload the plugin_apple_signin/metadata/apple-web-signin-system-object-definition.xml file in your sandbox.
+2. Upload the plugin_apple_signin/metadata/system-object-defintions/apple-web-signin-system-object-definition.xml file in your sandbox.
+2. Upload the plugin_apple_signin/metadata/services/apple-web-sign-in-jwks.xml file in your sandbox.
 3. Update site preference values.
 
 ## Resources
 
-1. https://developer.apple.com/documentation/signinwithapplejs
-2. https://stackoverflow.com/questions/58018184/how-to-revoke-sign-in-with-apple-credentials-for-a-specific-app
-3. https://jwt.io/
-4. https://sarunw.com/posts/sign-in-with-apple-4/
+1. https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js
+2. https://developer.apple.com/documentation/sign_in_with_apple/fetch_apple_s_public_key_for_verifying_token_signature
+3. https://stackoverflow.com/questions/58018184/how-to-revoke-sign-in-with-apple-credentials-for-a-specific-app
+4. https://jwt.io/
+5. https://sarunw.com/posts/sign-in-with-apple-4/
 
 
 ## Note
 
-This cartridge currently does not handle the scenario where a regular SFCC account with same email address exists.
+1. This cartridge currently does not handle the scenario where a regular SFCC account with same email address exists.
+2. This cartridge currently only supports SFRA but it can be easily used with SiteGenesis as well.
 
 PS: I'm not a security expert, if you find any mistake in this repo, please create an issue
