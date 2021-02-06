@@ -31,10 +31,10 @@ server.post('Redirect', function (req, res, next) {
     }
 
     var redirectUrl = URLUtils.url('Login-Show');
-    if (!idToken || !state || !code) {
-        res.redirect(redirectUrl.append('errorcode', 'apple.signin.error').toString());
-        Logger.error('Apple Web Sign-In : One of the mandatory value id_token, state or code is missing');
-        return next();
+    if (!idToken || !stateFromApple || !code) {
+      res.redirect(redirectUrl.append('errorcode', 'apple.signin.error').toString());
+      Logger.error('Apple Web Sign-In : One of the mandatory value id_token, state or code is missing');
+      return next();
     }
 
     var existingState = req.session.privacyCache.get('appleSignInState');
