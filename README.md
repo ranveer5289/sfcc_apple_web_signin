@@ -1,6 +1,8 @@
 ## Salesforce Commerce Cloud Apple Web Sign-In plugin
 
-This cartridge adds support for Apple Web Sign-In in SFRA.
+This cartridge adds support for Apple Web Sign-In in SFRA. 
+
+Note: This cartridge includes extra functionality to verify the identity of the user by validating the `id_token` received from apple servers. This is implemented to follow apple's guidelines on [security](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_rest_api/verifying_a_user).
 
 ## Apple Configuration
 
